@@ -91,14 +91,18 @@ const App: FC = () => {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
-                        if (route.name === "InfoScreen") {
+                        if (route.name === "All posts") {
+                            iconName = focused ? "home" : "home-outline";
+                        } else if (route.name === "My posts") {
+                            iconName = focused ? "eye" : "eye-outline";
+                        } else if (route.name === "My profile") {
                             iconName = focused
-                                ? "information-circle"
-                                : "information-circle-outline";
-                        } else if (route.name === "StudentStackComponent") {
+                                ? "person-circle"
+                                : "person-circle-outline";
+                        } else if (route.name === "Chat") {
                             iconName = focused
-                                ? "list-circle"
-                                : "list-circle-outline";
+                                ? "chatbubbles"
+                                : "chatbubbles-outline";
                         }
                         // You can return any component that you like here!
                         return (
@@ -114,11 +118,13 @@ const App: FC = () => {
                 })}
             >
                 <Tab.Screen
-                    name="StudentStackComponent"
+                    name="All posts"
                     component={StudentStackComponent}
                     options={{ headerShown: false }}
                 />
-                <Tab.Screen name="InfoScreen" component={InfoScreen} />
+                <Tab.Screen name="My posts" component={InfoScreen} />
+                <Tab.Screen name="My profile" component={InfoScreen} />
+                <Tab.Screen name="Chat" component={InfoScreen} />
             </Tab.Navigator>
         </NavigationContainer>
     );

@@ -32,13 +32,13 @@ const ListItem: FC<{
     return (
         <TouchableHighlight onPress={onClick} underlayColor={"gainsboro"}>
             <View style={styles.listRow}>
-                {image == "" && (
+                {image == "url" && (
                     <Image
                         style={styles.listRowImage}
                         source={require("../assets/avatar.png")}
                     />
                 )}
-                {image != "" && (
+                {image != "url" && (
                     <Image
                         style={styles.listRowImage}
                         source={{ uri: image.toString() }}
