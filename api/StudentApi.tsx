@@ -1,5 +1,4 @@
 import apiClient from "./ClientApi";
-import { Student } from "../Model/student_model";
 
 const getAllStudents = async () => {
     return apiClient.get("/student");

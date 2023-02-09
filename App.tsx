@@ -11,7 +11,7 @@ import {
     TextInput,
     TouchableHighlight,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -19,6 +19,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import StudentList from "./components/studentList";
 import StudentDetails from "./components/StudentDetails";
 import StudentAdd from "./components/StudentAdd";
+import PostAdd from "./components/PostAdd";
+import PostList from "./components/PostsList";
+import LoginPage from "./components/Login";
+import RegisterPage from "./components/Register";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -84,7 +88,58 @@ const StudentStackComponent: FC<{ route: any; navigation: any }> = ({
     );
 };
 
+const postsStack = createNativeStackNavigator();
+const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
+    route,
+    navigation,
+}) => {
+    const addNewPost = () => {
+        navigation.navigate("PostAdd");
+    };
+    return (
+        <postsStack.Navigator>
+            <postsStack.Screen
+                name="Post List"
+                component={PostList}
+                options={{
+                    headerRight: () => (
+                        <TouchableOpacity onPress={addNewPost}>
+                            <Ionicons
+                                name={"add-outline"}
+                                size={40}
+                                color={"gray"}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+            <postsStack.Screen name="PostAdd" component={PostAdd} />
+        </postsStack.Navigator>
+    );
+};
+
 const App: FC = () => {
+    const [token, setToken] = useState();
+    const Stack = createNativeStackNavigator();
+    if (!token) {
+        return (
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen name="Login">
+                        {(props) => (
+                            <LoginPage
+                                route={props.route}
+                                navigation={props.navigation}
+                                setTokenFunc={setToken}
+                            />
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="Register" component={RegisterPage} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        );
+    }
+
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -119,7 +174,7 @@ const App: FC = () => {
             >
                 <Tab.Screen
                     name="All posts"
-                    component={StudentStackComponent}
+                    component={PostsStackComponent}
                     options={{ headerShown: false }}
                 />
                 <Tab.Screen name="My posts" component={InfoScreen} />
@@ -130,10 +185,6 @@ const App: FC = () => {
     );
 };
 
-// const App: FC = () => {
-//     return <StudentList></StudentList>;
-// };
-
 const styles = StyleSheet.create({
     container: {
         marginTop: StatusBar.currentHeight,
@@ -143,35 +194,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-
-{
-    /* <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    title: "Apply to all",
-                    headerStyle: { backgroundColor: "red" },
-                }}
-            >
-                <Stack.Screen
-                    name="Home"
-                    component={HomeScreen}
-                    options={{
-                        headerTitle: () => <LogoTitle />,
-                        headerRight: () => (
-                            <Button
-                                onPress={() => alert("This is a button!")}
-                                title="Info"
-                                color="grey"
-                            />
-                        ),
-                    }}
-                />
-                <Stack.Screen
-                    name="Details"
-                    component={DetailsScreen}
-                    options={{ title: "Details" }}
-                    initialParams={{ id: "000" }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer> */
-}
