@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 
 import React from "react";
-import postModel, { Post } from "../Model/post_model";
+import postModel, { newPost, Post } from "../Model/post_model";
 import {
     StyleSheet,
     Text,
@@ -66,8 +66,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
 
     const onSaveCallback = async () => {
         console.log("button was pressed");
-        const post: Post = {
-            username: "curren user",
+        const post: newPost = {
             description: postDescription,
             image: "url",
         };
@@ -80,7 +79,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
             await postModel.addPost(post);
             console.log("posted");
         } catch (err) {
-            console.log("fail adding student");
+            console.log("fail adding post");
         }
         navigation.goBack();
     };

@@ -28,25 +28,26 @@ const ListItem: FC<{
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.listRow1}>
                 <View style={styles.listRow}>
+                    <Image
+                        style={styles.userImage}
+                        source={require("../assets/avatar.png")}
+                    />
+
+                    <Text style={styles.userName}>{name}</Text>
+                </View>
+                <View style={styles.listRowTextContainer}>
                     {image == "url" && (
                         <Image
-                            style={styles.userImage}
+                            style={styles.postImage}
                             source={require("../assets/avatar.png")}
                         />
                     )}
                     {image != "url" && (
                         <Image
-                            style={styles.userImage}
+                            style={styles.postImage}
                             source={{ uri: image.toString() }}
                         />
                     )}
-                    <Text style={styles.userName}>{name}</Text>
-                </View>
-                <View style={styles.listRowTextContainer}>
-                    <Image
-                        style={styles.postImage}
-                        source={require("../assets/avatar.png")}
-                    />
                     <Text style={styles.postContext}>{description}</Text>
                 </View>
             </View>
@@ -66,7 +67,6 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
     const [posts, setPosts] = useState<Array<Post>>();
 
     const fetchPosts = async () => {
-        console.log("focus");
         let posts: Post[] = [];
         try {
             posts = await postModel.getAllPosts();

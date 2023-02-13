@@ -5,11 +5,21 @@ export type Post = {
     username: String;
     description: String;
     image: String;
+    postId: String;
+};
+
+export type newPost = {
+    description: String;
+    image: String;
 };
 
 const getAllPosts = async () => {
     console.log("getAllPosts()");
     const res: any = await postApi.getAllPosts();
+    // if (res.status == 401) {
+    //     //token expired
+    //     // TODO - refresh token, saving it and try again
+    // }
     let posts = Array<Post>();
     if (res.data) {
         console.log(res.data);
@@ -19,22 +29,21 @@ const getAllPosts = async () => {
             const st: Post = {
                 username: obj.sender,
                 description: obj.message,
-                image: "url",
-                // image: obj.image,
+                image: obj.image,
+                postId: obj._id,
             };
             posts.push(st);
         });
     }
     return posts;
 };
-const addPost = async (post: Post) => {
+const addPost = async (post: newPost) => {
     const data = {
-        sender: post.username,
         message: post.description,
-        // image: post.image,
+        image: post.image,
     };
     try {
-        const res = await postApi.addPost(data);
+        await postApi.addPost(data);
     } catch (err) {
         console.log("add post fail " + err);
     }
