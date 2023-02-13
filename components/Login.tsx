@@ -11,6 +11,7 @@ import {
 import apiClient from "../api/ClientApi";
 
 import authModel, { LoginDetails } from "../Model/auth_model";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     route,
@@ -29,9 +30,14 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 
         try {
             const res = await authModel.userLogin(details);
-            console.log(setTokenFunc);
+            if (!res) {
+                console.log("returned status 400");
+                return;
+            }
             setTokenFunc(res.accessToken);
             apiClient.setHeader("Authorization", "JWT " + res.accessToken);
+            await AsyncStorage.setItem("accessToken", res.accessToken);
+            await AsyncStorage.setItem("refreshToken", res.refreshToken);
             console.log("posted");
         } catch (err) {
             console.log("fail login");

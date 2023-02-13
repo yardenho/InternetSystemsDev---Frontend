@@ -23,14 +23,9 @@ const ListItem: FC<{
     name: String;
     description: String;
     image: String;
-    onRowSelected: (id: String) => void;
-}> = ({ name, description, image, onRowSelected }) => {
-    const onClick = () => {
-        console.log("in the row: row was selected " + description);
-        onRowSelected(description);
-    };
+}> = ({ name, description, image }) => {
     return (
-        <TouchableHighlight onPress={onClick} underlayColor={"gainsboro"}>
+        <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.listRow1}>
                 <View style={styles.listRow}>
                     {image == "url" && (
@@ -92,13 +87,12 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
         <FlatList
             style={styles.flatlist}
             data={posts}
-            keyExtractor={(post) => post.username.toString()}
+            keyExtractor={(post) => post.postId.toString()}
             renderItem={({ item }) => (
                 <ListItem
                     name={item.username}
                     description={item.description}
                     image={item.image}
-                    onRowSelected={onRowSelected}
                 />
             )}
         ></FlatList>
