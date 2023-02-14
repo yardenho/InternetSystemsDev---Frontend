@@ -34,10 +34,13 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                 console.log("returned status 400");
                 return;
             }
-            setTokenFunc(res.accessToken);
-            apiClient.setHeader("Authorization", "JWT " + res.accessToken);
-            await AsyncStorage.setItem("accessToken", res.accessToken);
-            await AsyncStorage.setItem("refreshToken", res.refreshToken);
+            setTokenFunc(res.tokens.accessToken);
+            apiClient.setHeader(
+                "Authorization",
+                "JWT " + res.tokens.accessToken
+            );
+            await AsyncStorage.setItem("accessToken", res.tokens.accessToken);
+            await AsyncStorage.setItem("refreshToken", res.tokens.refreshToken);
             console.log("posted");
         } catch (err) {
             console.log("fail login");

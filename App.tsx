@@ -23,6 +23,8 @@ import PostAdd from "./components/PostAdd";
 import PostList from "./components/PostsList";
 import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import apiClient from "./api/ClientApi";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -118,8 +120,19 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
     );
 };
 
+const updateToken = async (setToken: any) => {
+    const token = await AsyncStorage.getItem("accessToken");
+    console.log("in update token " + token);
+    // await AsyncStorage.clear();
+    if (token != null) {
+        apiClient.setHeader("Authorization", "JWT " + token);
+        return setToken(token);
+    }
+};
+
 const App: FC = () => {
     const [token, setToken] = useState();
+    updateToken(setToken);
     const Stack = createNativeStackNavigator();
     if (!token) {
         return (

@@ -59,11 +59,6 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
     route,
     navigation,
 }) => {
-    const onRowSelected = (id: String) => {
-        console.log("in the list: row was selected id = " + id);
-        navigation.navigate("StudentDetails", { studentId: id });
-    };
-
     const [posts, setPosts] = useState<Array<Post>>();
 
     const fetchPosts = async () => {
