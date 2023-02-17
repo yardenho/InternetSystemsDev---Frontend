@@ -13,13 +13,7 @@ export type newPost = {
     image: String;
 };
 
-const getAllPosts = async () => {
-    console.log("getAllPosts()");
-    const res: any = await postApi.getAllPosts();
-    // if (res.status == 401) {
-    //     //token expired
-    //     // TODO - refresh token, saving it and try again
-    // }
+const createPostsList = (res: any) => {
     let posts = Array<Post>();
     if (res.data) {
         console.log(res.data);
@@ -37,6 +31,27 @@ const getAllPosts = async () => {
     }
     return posts;
 };
+
+const getAllPosts = async () => {
+    console.log("getAllPosts()");
+    const res: any = await postApi.getAllPosts();
+    // if (res.status == 401) { TODO
+    //     //token expired
+    //     // TODO - refresh token, saving it and try again
+    // }
+    return createPostsList(res);
+};
+
+const getAllUserPosts = async (userId: string) => {
+    console.log("getAllUserPosts()");
+    const res: any = await postApi.getAllUserPosts(userId);
+    // if (res.status == 401) { TODO
+    //     //token expired
+    //     // TODO - refresh token, saving it and try again
+    // }
+    return createPostsList(res);
+};
+
 const addPost = async (post: newPost) => {
     const data = {
         message: post.description,
@@ -73,4 +88,4 @@ const uploadImage = async (imageURI: String) => {
     return "";
 };
 
-export default { getAllPosts, addPost, uploadImage };
+export default { getAllPosts, addPost, uploadImage, getAllUserPosts };

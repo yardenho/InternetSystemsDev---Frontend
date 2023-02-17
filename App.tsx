@@ -25,6 +25,7 @@ import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiClient from "./api/ClientApi";
+import MyPostsList from "./components/myPostsList";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -98,6 +99,7 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
     const addNewPost = () => {
         navigation.navigate("PostAdd");
     };
+
     return (
         <postsStack.Navigator>
             <postsStack.Screen
@@ -109,7 +111,7 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
                             <Ionicons
                                 name={"add-outline"}
                                 size={40}
-                                color={"gray"}
+                                color={"black"}
                             />
                         </TouchableOpacity>
                     ),
@@ -123,7 +125,6 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
 const updateToken = async (setToken: any) => {
     const token = await AsyncStorage.getItem("accessToken");
     console.log("in update token " + token);
-    // await AsyncStorage.clear();
     if (token != null) {
         apiClient.setHeader("Authorization", "JWT " + token);
         return setToken(token);
@@ -134,6 +135,7 @@ const App: FC = () => {
     const [token, setToken] = useState();
     updateToken(setToken);
     const Stack = createNativeStackNavigator();
+
     if (!token) {
         return (
             <NavigationContainer>
@@ -190,7 +192,7 @@ const App: FC = () => {
                     component={PostsStackComponent}
                     options={{ headerShown: false }}
                 />
-                <Tab.Screen name="My posts" component={InfoScreen} />
+                <Tab.Screen name="My posts" component={MyPostsList} />
                 <Tab.Screen name="My profile" component={InfoScreen} />
                 <Tab.Screen name="Chat" component={InfoScreen} />
             </Tab.Navigator>
@@ -203,6 +205,9 @@ const styles = StyleSheet.create({
         marginTop: StatusBar.currentHeight,
         flex: 1,
         backgroundColor: "grey",
+    },
+    row: {
+        flexDirection: "row",
     },
 });
 

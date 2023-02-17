@@ -41,6 +41,7 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
             );
             await AsyncStorage.setItem("accessToken", res.tokens.accessToken);
             await AsyncStorage.setItem("refreshToken", res.tokens.refreshToken);
+            await AsyncStorage.setItem("userId", res.userId);
             console.log("posted");
         } catch (err) {
             console.log("fail login");

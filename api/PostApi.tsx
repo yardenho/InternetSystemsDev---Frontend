@@ -13,6 +13,18 @@ const getAllPosts = async () => {
     return res;
 };
 
+const getAllUserPosts = async (userId: string) => {
+    const res: any = await apiClient.get("/post?sender=" + userId);
+    console.log("in getAllUserPosts " + res.status);
+
+    if (res.status == 401) {
+        console.log("in 401 - getAllUserPosts");
+        await authModel.refreshToken();
+        await apiClient.get("/post?sender=" + userId);
+    }
+    return res;
+};
+
 const addPost = async (postJson: any) => {
     const res: any = await apiClient.post("/post", postJson);
     console.log("in add new post " + res.status);
@@ -33,4 +45,5 @@ export default {
     getAllPosts,
     addPost,
     uploadImage,
+    getAllUserPosts,
 };
