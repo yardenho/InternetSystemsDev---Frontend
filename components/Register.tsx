@@ -12,6 +12,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     route,
     navigation,
 }) => {
+    const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,6 +21,8 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
         const details: RegisterDetails = {
             email: username,
             password: password,
+            fullName: fullName,
+            image: "url",
         };
 
         try {
@@ -34,6 +37,12 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     return (
         <View style={styles.container}>
             <Text style={styles.text}>REGISTER !</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setFullName}
+                value={fullName}
+                placeholder="Full Name"
+            />
             <TextInput
                 style={styles.input}
                 onChangeText={setUsername}

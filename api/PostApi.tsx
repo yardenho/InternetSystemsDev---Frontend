@@ -20,7 +20,7 @@ const getAllUserPosts = async (userId: string) => {
     if (res.status == 401) {
         console.log("in 401 - getAllUserPosts");
         await authModel.refreshToken();
-        await apiClient.get("/post?sender=" + userId);
+        return apiClient.get("/post?sender=" + userId);
     }
     return res;
 };

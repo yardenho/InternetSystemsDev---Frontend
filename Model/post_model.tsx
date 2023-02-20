@@ -1,5 +1,6 @@
 import postApi from "../api/PostApi";
 import FormData from "form-data";
+import userModel from "./user_model";
 
 export type Post = {
     username: String;
@@ -17,9 +18,11 @@ const createPostsList = (res: any) => {
     let posts = Array<Post>();
     if (res.data) {
         console.log(res.data);
-        res.data.post.forEach((obj: any) => {
+        res.data.post.forEach(async (obj: any) => {
             console.log(obj);
             console.log("element: " + obj._id);
+            const user: any = await userModel.getUserById(obj.sender);
+            console.log("user name - " + user);
             const st: Post = {
                 username: obj.sender,
                 description: obj.message,

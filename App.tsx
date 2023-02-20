@@ -124,6 +124,7 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
 
 const updateToken = async (setToken: any) => {
     const token = await AsyncStorage.getItem("accessToken");
+    // await AsyncStorage.clear();
     console.log("in update token " + token);
     if (token != null) {
         apiClient.setHeader("Authorization", "JWT " + token);

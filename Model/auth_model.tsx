@@ -11,6 +11,8 @@ export type LoginDetails = {
 export type RegisterDetails = {
     email: String;
     password: String;
+    fullName: String;
+    image: String;
 };
 
 const userLogin = async (loginDetails: LoginDetails) => {
