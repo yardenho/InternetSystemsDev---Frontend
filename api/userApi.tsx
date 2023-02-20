@@ -1,18 +1,18 @@
 import apiClient from "./ClientApi";
 import authModel from "../Model/auth_model";
 
-const getUserById = async (userId: string) => {
+const getUserById = async (userId: String) => {
     console.log(userId);
-    const res: any = await apiClient.get("/user", userId);
+    let res: any = await apiClient.get("/user/" + userId);
     console.log("in getUserById " + res.status);
-    console.log("res " + res);
+    console.log("res " + res.data.fullName);
 
     if (res.status == 401) {
         console.log("in 401 - getUserById");
         await authModel.refreshToken();
-        return apiClient.get("/user", userId);
+        res = await apiClient.get("/user/" + userId);
     }
-    return res;
+    return res.data;
 };
 
 export default {

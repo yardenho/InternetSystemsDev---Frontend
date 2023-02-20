@@ -17,12 +17,13 @@ export type newPost = {
 const createPostsList = (res: any) => {
     let posts = Array<Post>();
     if (res.data) {
+        console.log(" in  if (res.data)");
         console.log(res.data);
-        res.data.post.forEach(async (obj: any) => {
+        res.data.post.forEach((obj: any) => {
             console.log(obj);
             console.log("element: " + obj._id);
-            const user: any = await userModel.getUserById(obj.sender);
-            console.log("user name - " + user);
+            // const user: any = await userModel.getUserById(obj.sender);
+            // console.log("user name - " + user.fullName);
             const st: Post = {
                 username: obj.sender,
                 description: obj.message,
@@ -32,6 +33,15 @@ const createPostsList = (res: any) => {
             posts.push(st);
         });
     }
+    //TODO - put a name in a post and not a user id
+    // posts.forEach(async (obj: Post) => {
+    //     const user: any = await userModel.getUserById(obj.username);
+    //     // console.log("user name - " + user.fullName);
+    //     obj.username = user.fullName;
+    // });
+    // console.log("posts");
+
+    // console.log(posts);
     return posts;
 };
 
@@ -43,6 +53,8 @@ const getAllPosts = async () => {
     //     // TODO - refresh token, saving it and try again
     // }
     return createPostsList(res);
+    // return updatingUsersNames(posts);
+    // return posts;
 };
 
 const getAllUserPosts = async (userId: string) => {
