@@ -20,6 +20,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import userModel from "../Model/user_model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const DefaultPassword = "********";
+
 const MyProfile: FC<{ route: any; navigation: any }> = ({
     route,
     navigation,
@@ -27,10 +29,13 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
     const [userFullname, setFullName] = useState("");
     const [userAvatarUri, setAvatarUri] = useState("url");
     const [userEmail, setEmail] = useState("");
-    const [userPassword, setPassword] = useState("");
+    const [userPassword, setPassword] = useState(DefaultPassword);
+    const [editable, setEditable] = useState(false);
 
     const updateDetails = async () => {
         const currentUserId = await AsyncStorage.getItem("userId");
+        console.log("currentUserId");
+        console.log(currentUserId);
         if (currentUserId != null) {
             const user: any = await userModel.getUserById(currentUserId);
             console.log("user name - " + user.fullName);
@@ -82,10 +87,19 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
         }
     };
 
+    const onCancelCallback = async () => {
+        setEditable(false);
+    };
+
     const onSaveCallback = async () => {
         console.log("button was pressed");
+        if (!editable) {
+            setEditable(true);
+            return;
+        }
+
         let newDetails;
-        if (userPassword != "") {
+        if (userPassword != DefaultPassword) {
             newDetails = {
                 fullName: userFullname,
                 image: userAvatarUri,
@@ -111,6 +125,8 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                 console.log(newDetails);
                 await userModel.putUserById(currentUserId, newDetails);
                 console.log("posted");
+                setEditable(false);
+                setPassword(DefaultPassword);
             } else {
                 console.log("fail updation user");
             }
@@ -137,14 +153,17 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                         ></Image>
                     )}
 
-                    <TouchableOpacity onPress={openCamera}>
+                    <TouchableOpacity disabled={!editable} onPress={openCamera}>
                         <Ionicons
                             name={"camera"}
                             style={styles.cameraButton}
                             size={50}
                         ></Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={openGallery}>
+                    <TouchableOpacity
+                        disabled={!editable}
+                        onPress={openGallery}
+                    >
                         <Ionicons
                             name={"image"}
                             style={styles.galleryBotton}
@@ -158,27 +177,48 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                     onChangeText={setFullName}
                     placeholder="Full Name"
                     value={userFullname}
+                    editable={editable}
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={setEmail}
                     placeholder="Email"
                     value={userEmail}
+                    editable={editable}
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={setPassword}
                     placeholder="Password"
                     value={userPassword}
+                    editable={editable}
                 />
-                <View style={styles.buttonsContainer}>
+                {!editable && (
                     <TouchableOpacity
                         style={styles.button}
                         onPress={onSaveCallback}
                     >
-                        <Text style={styles.buttonText}>Save My Details</Text>
+                        <Text style={styles.buttonText}>Edit my details </Text>
                     </TouchableOpacity>
-                </View>
+                )}
+                {editable && (
+                    <View style={styles.buttonsContainer}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={onCancelCallback}
+                        >
+                            <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={onSaveCallback}
+                        >
+                            <Text style={styles.buttonText}>
+                                Save My Details
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         </ScrollView>
     );
