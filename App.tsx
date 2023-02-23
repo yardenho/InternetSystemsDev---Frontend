@@ -26,6 +26,7 @@ import RegisterPage from "./components/Register";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiClient from "./api/ClientApi";
 import MyPostsList from "./components/myPostsList";
+import MyProfile from "./components/myProfile";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -194,7 +195,7 @@ const App: FC = () => {
                     options={{ headerShown: false }}
                 />
                 <Tab.Screen name="My posts" component={MyPostsList} />
-                <Tab.Screen name="My profile" component={InfoScreen} />
+                <Tab.Screen name="My profile" component={MyProfile} />
                 <Tab.Screen name="Chat" component={InfoScreen} />
             </Tab.Navigator>
         </NavigationContainer>

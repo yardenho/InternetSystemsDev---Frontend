@@ -15,6 +15,19 @@ const getUserById = async (userId: String) => {
     return res.data;
 };
 
+const putUserById = async (userId: String, userDetails: any) => {
+    console.log(userId);
+    let res: any = await apiClient.put("/user/" + userId, userDetails);
+
+    if (res.status == 401) {
+        console.log("in 401 - getUserById");
+        await authModel.refreshToken();
+        res = await apiClient.put("/user/" + userId, userDetails);
+    }
+    return res.data;
+};
+
 export default {
     getUserById,
+    putUserById,
 };

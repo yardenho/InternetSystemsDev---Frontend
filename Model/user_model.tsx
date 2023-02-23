@@ -10,4 +10,14 @@ const getUserById = async (userId: String) => {
     return res;
 };
 
-export default { getUserById };
+const putUserById = async (userId: String, userDetails: any) => {
+    console.log("putUserById()");
+    const res = await userApi.putUserById(userId, userDetails);
+    // if (res.status == 401) { TODO
+    //     //token expired
+    //     // TODO - refresh token, saving it and try again
+    // }
+    return res;
+};
+
+export default { getUserById, putUserById };
