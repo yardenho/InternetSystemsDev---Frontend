@@ -7,6 +7,7 @@ export type Post = {
     description: String;
     image: String;
     postId: String;
+    userImage: String;
 };
 
 export type newPost = {
@@ -29,6 +30,7 @@ const createPostsList = (res: any) => {
                 description: obj.message,
                 image: obj.image,
                 postId: obj._id,
+                userImage: "url",
             };
             posts.push(st);
         });
@@ -59,7 +61,7 @@ const getAllPosts = async () => {
 
 const getAllUserPosts = async (userId: string) => {
     console.log("getAllUserPosts()");
-    const res: any = await postApi.getAllUserPosts(userId);
+    let res: any = await postApi.getAllUserPosts(userId);
     // if (res.status == 401) { TODO
     //     //token expired
     //     // TODO - refresh token, saving it and try again
