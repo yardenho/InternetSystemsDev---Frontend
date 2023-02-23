@@ -18,20 +18,31 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import postModel, { Post } from "../Model/post_model";
+import userModel from "../Model/user_model";
 
 const ListItem: FC<{
     name: String;
     description: String;
     image: String;
-}> = ({ name, description, image }) => {
+    userImage: String;
+}> = ({ name, description, image, userImage }) => {
+    //TODO - fix style of the first View
     return (
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.listRow1}>
                 <View style={styles.listRow}>
-                    <Image
-                        style={styles.userImage}
-                        source={require("../assets/avatar.png")}
-                    />
+                    {image == "url" && (
+                        <Image
+                            style={styles.postImage}
+                            source={require("../assets/avatar.png")}
+                        />
+                    )}
+                    {image != "url" && (
+                        <Image
+                            style={styles.postImage}
+                            source={{ uri: userImage.toString() }}
+                        />
+                    )}
 
                     <Text style={styles.userName}>{name}</Text>
                 </View>
@@ -88,6 +99,7 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
                     name={item.username}
                     description={item.description}
                     image={item.image}
+                    userImage={item.userImage}
                 />
             )}
         ></FlatList>
