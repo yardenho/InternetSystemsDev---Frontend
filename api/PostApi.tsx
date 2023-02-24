@@ -37,6 +37,18 @@ const addPost = async (postJson: any) => {
     return res;
 };
 
+const deletePost = async (postId: String) => {
+    const res: any = await apiClient.delete("/post/" + postId);
+    console.log("in delete post " + res.status);
+    if (res.status == 401) {
+        console.log("in 401 - deletePost");
+
+        await authModel.refreshToken();
+        return apiClient.delete("/post/" + postId);
+    }
+    return res;
+};
+
 const uploadImage = async (image: any) => {
     return apiClient.post("/file/file", image);
 };
@@ -46,4 +58,5 @@ export default {
     addPost,
     uploadImage,
     getAllUserPosts,
+    deletePost,
 };

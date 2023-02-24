@@ -11,39 +11,46 @@ export type Post = {
 };
 
 export type newPost = {
+    //TODO
     description: String;
     image: String;
 };
 
-const createPostsList = (res: any) => {
+const createPostsList = async (res: any) => {
     let posts = Array<Post>();
     if (res.data) {
         console.log(" in  if (res.data)");
         console.log(res.data);
-        res.data.post.forEach((obj: any) => {
-            console.log(obj);
-            console.log("element: " + obj._id);
-            // const user: any = await userModel.getUserById(obj.sender);
-            // console.log("user name - " + user.fullName);
+        const list = res.data.post;
+        console.log(list);
+        for (let i = 0; i < list.length; ++i) {
+            console.log("element: " + list[i]._id);
+            const user: any = await userModel.getUserById(list[i].sender);
+            console.log("user name - " + user.fullName);
             const st: Post = {
-                username: obj.sender,
-                description: obj.message,
-                image: obj.image,
-                postId: obj._id,
-                userImage: "url",
+                username: user.fullName,
+                description: list[i].message,
+                image: list[i].image,
+                postId: list[i]._id,
+                userImage: user.image,
             };
             posts.push(st);
-        });
+        }
+        // res.data.post.forEach((obj: any) => {
+        // console.log(obj);
+        // console.log("element: " + obj._id);
+        // // const user: any = await userModel.getUserById(obj.sender);
+        // // console.log("user name - " + user.fullName);
+        // const st: Post = {
+        //     username: obj.sender,
+        //     description: obj.message,
+        //     image: obj.image,
+        //     postId: obj._id,
+        //     userImage: "url",
+        // };
+        // posts.push(st);
+        // });
     }
-    //TODO - put a name in a post and not a user id
-    // posts.forEach(async (obj: Post) => {
-    //     const user: any = await userModel.getUserById(obj.username);
-    //     // console.log("user name - " + user.fullName);
-    //     obj.username = user.fullName;
-    // });
-    // console.log("posts");
-
-    // console.log(posts);
     return posts;
 };
 
@@ -81,6 +88,14 @@ const addPost = async (post: newPost) => {
     }
 };
 
+const deletePost = async (postId: String) => {
+    try {
+        await postApi.deletePost(postId);
+    } catch (err) {
+        console.log("add post fail " + err);
+    }
+};
+
 const uploadImage = async (imageURI: String) => {
     var body = new FormData();
     body.append("file", {
@@ -105,4 +120,10 @@ const uploadImage = async (imageURI: String) => {
     return "";
 };
 
-export default { getAllPosts, addPost, uploadImage, getAllUserPosts };
+export default {
+    getAllPosts,
+    addPost,
+    uploadImage,
+    getAllUserPosts,
+    deletePost,
+};

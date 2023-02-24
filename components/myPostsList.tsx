@@ -15,21 +15,60 @@ import {
 import React from "react";
 import postModel, { Post } from "../Model/post_model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
 
 const ListItem: FC<{
     name: String;
     description: String;
     image: String;
-}> = ({ name, description, image }) => {
+    userImage: String;
+    postId: String;
+    onDelete: any;
+}> = ({ name, description, image, userImage, postId, onDelete }) => {
+    const onDeletePress = async () => {
+        try {
+            const res = await postModel.deletePost(postId);
+            console.log("deleted");
+            onDelete();
+        } catch (err) {
+            console.log("fail in delete");
+        }
+    };
     return (
         <TouchableHighlight underlayColor={"gainsboro"}>
-            <View style={styles.listRow1}>
+            <View style={styles.list}>
                 <View style={styles.listRow}>
-                    <Image
-                        style={styles.userImage}
-                        source={require("../assets/avatar.png")}
-                    />
+                    {userImage == "url" && (
+                        <Image
+                            style={styles.userImage}
+                            source={require("../assets/avatar.png")}
+                        />
+                    )}
+                    {userImage != "url" && (
+                        <Image
+                            style={styles.userImage}
+                            source={{ uri: userImage.toString() }}
+                        />
+                    )}
+
                     <Text style={styles.userName}>{name}</Text>
+                    <TouchableOpacity
+                        style={{ left: 110, marginTop: 5 }}
+                        onPress={onDeletePress}
+                    >
+                        <AntDesign
+                            name={"delete"}
+                            size={30}
+                            color={"gray"}
+                        ></AntDesign>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ left: 110, margin: 5 }}>
+                        <AntDesign
+                            name={"edit"}
+                            size={30}
+                            color={"gray"}
+                        ></AntDesign>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.listRowTextContainer}>
                     {image == "url" && (
@@ -89,6 +128,9 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
                     name={item.username}
                     description={item.description}
                     image={item.image}
+                    userImage={item.userImage}
+                    postId={item.postId}
+                    onDelete={fetchMyPosts}
                 />
             )}
         ></FlatList>
@@ -96,7 +138,7 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
 };
 
 const styles = StyleSheet.create({
-    listRow1: {
+    list: {
         margin: 4,
         flex: 1,
         elevation: 1,
@@ -132,6 +174,9 @@ const styles = StyleSheet.create({
     flatlist: {
         flex: 1,
         marginTop: StatusBar.currentHeight,
+    },
+    picker: {
+        left: 10,
     },
 });
 

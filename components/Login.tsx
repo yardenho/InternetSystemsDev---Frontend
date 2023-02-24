@@ -23,6 +23,7 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 
     const onLoginCallback = async () => {
         console.log("button was pressed");
+        //TODO - check if username, password arent empty
         const details: LoginDetails = {
             email: username,
             password: password,

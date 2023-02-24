@@ -31,15 +31,15 @@ const ListItem: FC<{
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.listRow1}>
                 <View style={styles.listRow}>
-                    {image == "url" && (
+                    {userImage == "url" && (
                         <Image
-                            style={styles.postImage}
+                            style={styles.userImage}
                             source={require("../assets/avatar.png")}
                         />
                     )}
-                    {image != "url" && (
+                    {userImage != "url" && (
                         <Image
-                            style={styles.postImage}
+                            style={styles.userImage}
                             source={{ uri: userImage.toString() }}
                         />
                     )}
