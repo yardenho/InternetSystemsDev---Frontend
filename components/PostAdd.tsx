@@ -67,7 +67,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
     const onSaveCallback = async () => {
         console.log("button was pressed");
         const post: newPost = {
-            description: postDescription,
+            message: postDescription,
             image: "url",
         };
         try {
