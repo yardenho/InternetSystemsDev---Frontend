@@ -24,7 +24,8 @@ const ListItem: FC<{
     userImage: String;
     postId: String;
     onDelete: any;
-}> = ({ name, description, image, userImage, postId, onDelete }) => {
+    onEdit: any;
+}> = ({ name, description, image, userImage, postId, onDelete, onEdit }) => {
     const onDeletePress = async () => {
         try {
             const res = await postModel.deletePost(postId);
@@ -34,6 +35,15 @@ const ListItem: FC<{
             console.log("fail in delete");
         }
     };
+
+    const onEditPress = async () => {
+        try {
+            onEdit(postId);
+        } catch (err) {
+            console.log("fail in edit");
+        }
+    };
+
     return (
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.list}>
@@ -62,7 +72,10 @@ const ListItem: FC<{
                             color={"gray"}
                         ></AntDesign>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ left: 110, margin: 5 }}>
+                    <TouchableOpacity
+                        style={{ left: 110, margin: 5 }}
+                        onPress={onEditPress}
+                    >
                         <AntDesign
                             name={"edit"}
                             size={30}
@@ -96,6 +109,10 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
 }) => {
     const [posts, setPosts] = useState<Array<Post>>();
 
+    const onEdit = async (postId: String) => {
+        navigation.navigate("PostEdit", { postId: postId });
+    };
+
     const fetchMyPosts = async () => {
         let posts: Post[] = [];
         try {
@@ -126,11 +143,12 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
             renderItem={({ item }) => (
                 <ListItem
                     name={item.username}
-                    description={item.description}
+                    description={item.message}
                     image={item.image}
                     userImage={item.userImage}
                     postId={item.postId}
                     onDelete={fetchMyPosts}
+                    onEdit={onEdit}
                 />
             )}
         ></FlatList>

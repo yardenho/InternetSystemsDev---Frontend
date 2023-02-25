@@ -27,6 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiClient from "./api/ClientApi";
 import MyPostsList from "./components/myPostsList";
 import MyProfile from "./components/myProfile";
+import PostEdit from "./components/editPost";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -104,7 +105,7 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
     return (
         <postsStack.Navigator>
             <postsStack.Screen
-                name="Post List"
+                name="All Posts"
                 component={PostList}
                 options={{
                     headerRight: () => (
@@ -118,8 +119,47 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
                     ),
                 }}
             />
-            <postsStack.Screen name="PostAdd" component={PostAdd} />
+            <postsStack.Screen
+                name="PostAdd"
+                component={PostAdd}
+                options={{ title: "Add Post" }}
+            />
         </postsStack.Navigator>
+    );
+};
+
+const myPostsStack = createNativeStackNavigator();
+const MyPostsStackComponent: FC<{ route: any; navigation: any }> = ({
+    route,
+    navigation,
+}) => {
+    const addNewPost = () => {
+        navigation.navigate("PostAdd");
+    };
+
+    return (
+        <myPostsStack.Navigator>
+            <myPostsStack.Screen
+                name="My Posts"
+                component={MyPostsList}
+                options={{
+                    headerRight: () => (
+                        <TouchableOpacity onPress={addNewPost}>
+                            <Ionicons
+                                name={"add-outline"}
+                                size={40}
+                                color={"black"}
+                            />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+            <myPostsStack.Screen
+                name="PostEdit"
+                component={PostEdit}
+                options={{ title: "Edit Post" }}
+            />
+        </myPostsStack.Navigator>
     );
 };
 
@@ -194,7 +234,11 @@ const App: FC = () => {
                     component={PostsStackComponent}
                     options={{ headerShown: false }}
                 />
-                <Tab.Screen name="My posts" component={MyPostsList} />
+                <Tab.Screen
+                    name="My posts"
+                    component={MyPostsStackComponent}
+                    options={{ headerShown: false }}
+                />
                 <Tab.Screen name="My profile" component={MyProfile} />
                 <Tab.Screen name="Chat" component={InfoScreen} />
             </Tab.Navigator>

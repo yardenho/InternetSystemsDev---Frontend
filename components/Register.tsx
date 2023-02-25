@@ -29,6 +29,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
             const res = await authModel.userRegister(details);
             console.log(res);
             console.log("registered");
+            navigation.navigate("LoginPage");
         } catch (err) {
             console.log("fail in register");
         }

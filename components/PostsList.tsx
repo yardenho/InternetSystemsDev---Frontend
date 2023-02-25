@@ -97,7 +97,7 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
             renderItem={({ item }) => (
                 <ListItem
                     name={item.username}
-                    description={item.description}
+                    description={item.message}
                     image={item.image}
                     userImage={item.userImage}
                 />

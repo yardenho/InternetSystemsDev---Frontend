@@ -1,4 +1,5 @@
 import authModel from "../Model/auth_model";
+import { newPost } from "../Model/post_model";
 import apiClient from "./ClientApi";
 
 const getAllPosts = async () => {
@@ -9,6 +10,18 @@ const getAllPosts = async () => {
         console.log("in 401 - getAllPosts");
         await authModel.refreshToken();
         return apiClient.get("/post");
+    }
+    return res;
+};
+
+const getPostById = async (postId: String) => {
+    const res: any = await apiClient.get("/post/" + postId);
+    console.log("in getPostById ");
+
+    if (res.status == 401) {
+        console.log("in 401 - getPostById");
+        await authModel.refreshToken();
+        return apiClient.get("/post/" + postId);
     }
     return res;
 };
@@ -49,6 +62,20 @@ const deletePost = async (postId: String) => {
     return res;
 };
 
+const editPost = async (postId: String, post: newPost) => {
+    console.log("********* in postApi *************");
+    console.log(post);
+    const res: any = await apiClient.put("/post/" + postId, post);
+    console.log("in edit post " + res.status);
+    if (res.status == 401) {
+        console.log("in 401 - editPost");
+
+        await authModel.refreshToken();
+        return apiClient.put("/post/" + postId, post);
+    }
+    return res;
+};
+
 const uploadImage = async (image: any) => {
     return apiClient.post("/file/file", image);
 };
@@ -59,4 +86,6 @@ export default {
     uploadImage,
     getAllUserPosts,
     deletePost,
+    getPostById,
+    editPost,
 };

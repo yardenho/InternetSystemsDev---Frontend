@@ -4,15 +4,15 @@ import userModel from "./user_model";
 
 export type Post = {
     username: String;
-    description: String;
+    message: String;
     image: String;
     postId: String;
     userImage: String;
 };
 
 export type newPost = {
-    //TODO
-    description: String;
+    //TODO - to delete
+    message: String;
     image: String;
 };
 
@@ -29,27 +29,13 @@ const createPostsList = async (res: any) => {
             console.log("user name - " + user.fullName);
             const st: Post = {
                 username: user.fullName,
-                description: list[i].message,
+                message: list[i].message,
                 image: list[i].image,
                 postId: list[i]._id,
                 userImage: user.image,
             };
             posts.push(st);
         }
-        // res.data.post.forEach((obj: any) => {
-        // console.log(obj);
-        // console.log("element: " + obj._id);
-        // // const user: any = await userModel.getUserById(obj.sender);
-        // // console.log("user name - " + user.fullName);
-        // const st: Post = {
-        //     username: obj.sender,
-        //     description: obj.message,
-        //     image: obj.image,
-        //     postId: obj._id,
-        //     userImage: "url",
-        // };
-        // posts.push(st);
-        // });
     }
     return posts;
 };
@@ -66,6 +52,17 @@ const getAllPosts = async () => {
     // return posts;
 };
 
+const getPostById = async (PostId: String) => {
+    console.log("getPostById()");
+    return postApi.getPostById(PostId);
+};
+
+const editPostById = async (postId: String, Post: any) => {
+    console.log("editPostById()");
+    console.log(postId);
+    return postApi.editPost(postId, Post);
+};
+
 const getAllUserPosts = async (userId: string) => {
     console.log("getAllUserPosts()");
     let res: any = await postApi.getAllUserPosts(userId);
@@ -78,7 +75,7 @@ const getAllUserPosts = async (userId: string) => {
 
 const addPost = async (post: newPost) => {
     const data = {
-        message: post.description,
+        message: post.message,
         image: post.image,
     };
     try {
@@ -126,4 +123,6 @@ export default {
     uploadImage,
     getAllUserPosts,
     deletePost,
+    getPostById,
+    editPostById,
 };
