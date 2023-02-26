@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import apiClient from "../api/ClientApi";
+import FacebookLogin from "react-facebook-login";
 
 import authModel, { LoginDetails } from "../Model/auth_model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,14 +19,14 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     navigation,
     setTokenFunc,
 }) => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const onLoginCallback = async () => {
         console.log("button was pressed");
         //TODO - check if username, password arent empty
         const details: LoginDetails = {
-            email: username,
+            email: email,
             password: password,
         };
 
@@ -50,15 +51,21 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
         }
     };
 
+    const responseFacebook = (res: any) => {
+        console.log(res);
+    };
+    const componenetClicked = () => {
+        console.log("response");
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.text}> Welcome to my app :)</Text>
             <Text style={styles.text}>LOGIN !</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setUsername}
-                value={username}
-                placeholder="Username"
+                onChangeText={setEmail}
+                value={email}
+                placeholder="Email"
             />
             <TextInput
                 style={styles.input}
@@ -75,6 +82,15 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                     Don't have account? Regiter now
                 </Text>
             </TouchableOpacity>
+            <FacebookLogin
+                appId="904545097477815"
+                autoLoad={true}
+                fields="password,email"
+                callback={responseFacebook}
+                onClick={componenetClicked}
+                cssClass="my-facebook-button-class"
+                icon="fa-facebook"
+            ></FacebookLogin>
         </View>
     );
 };
@@ -115,3 +131,6 @@ const styles = StyleSheet.create({
 });
 
 export default LoginPage;
+function render() {
+    throw new Error("Function not implemented.");
+}

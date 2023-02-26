@@ -184,7 +184,7 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                     onChangeText={setEmail}
                     placeholder="Email"
                     value={userEmail}
-                    editable={editable}
+                    editable={false}
                 />
                 <TextInput
                     style={styles.input}

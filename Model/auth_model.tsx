@@ -18,6 +18,7 @@ export type RegisterDetails = {
 const userLogin = async (loginDetails: LoginDetails) => {
     console.log("login()");
     const res: any = await authApi.login(loginDetails);
+    console.log(res);
     if (res.status == 400) {
         console.log(res.data.error);
         console.log("error in login");
