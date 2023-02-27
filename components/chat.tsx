@@ -8,27 +8,22 @@ import {
     View,
     Image,
     TouchableOpacity,
-    Button,
-    Alert,
     TextInput,
     StatusBar,
-    ScrollView,
     FlatList,
     TouchableHighlight,
 } from "react-native";
 
-import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import StudentDetails from "./StudentDetails";
 import Client, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../Model/chat_model";
 import * as io from "socket.io-client";
 import userModel from "../Model/user_model";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 let currentUserId: String | null;
+let socket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
 
 const ListItem: FC<{
     sender: String;
@@ -47,7 +42,8 @@ const ListItem: FC<{
                     borderRadius: 3,
                     backgroundColor:
                         senderId == currentUserId ? "green" : "grey",
-                    marginRight: senderId == currentUserId ? 0 : 4,
+                    marginRight: senderId == currentUserId ? 0 : 20,
+                    marginLeft: senderId == currentUserId ? 20 : 0,
                 }}
             >
                 <Text style={styles.userName}>{sender}</Text>
@@ -73,7 +69,6 @@ const ListItem: FC<{
 };
 
 const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
-    let socket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
     const [messages, setMessages] = useState<Array<Message>>();
     const [newMessage, setNewMessage] = useState("");
 
@@ -96,8 +91,24 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             },
         });
         await clientSocketConnect(socket);
-        // const client = { socket: socket, accessToken: token, id: userId };
         return socket;
+    };
+
+    const sendMessage = () => {
+        console.log("***********sendMessage**********************");
+        console.log(socket);
+        if (socket != undefined) {
+            socket.once("chat:message", (arg) => {
+                console.log("new message id === " + arg.res.body._id); // message id
+                fetchMessages(socket);
+                setNewMessage("");
+            });
+            console.log("test chat send message");
+
+            socket.emit("chat:send_message", {
+                message: newMessage,
+            });
+        }
     };
 
     const addUsernameToMessages = async (res: any) => {
@@ -113,7 +124,8 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                     senderId: res[i].sender,
                     sender: user.fullName,
                     message: res[i].message,
-                    image: res[i].image,
+                    image: user.image,
+                    messageId: res[i]._id,
                 };
                 messages.push(mes);
             }
@@ -121,25 +133,30 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         return messages;
     };
 
+    const fetchMessages = (socket: any) => {
+        socket.once("chat:get_all.response", async (arg: any) => {
+            //TODO - set list
+            console.log(arg.body);
+            setMessages(await addUsernameToMessages(arg.body));
+            console.log(messages);
+        });
+        console.log("test chat get all messages");
+        console.log(socket.id);
+        socket.emit("chat:get_all");
+    };
+
     const updateUserId = async () => {
         currentUserId = await AsyncStorage.getItem("userId");
         console.log(currentUserId);
     };
+
     React.useEffect(() => {
         updateUserId();
         const subscribe = navigation.addListener("focus", async () => {
             console.log("focus");
             socket = await connectUser();
             if (socket != undefined) {
-                socket.once("chat:get_all.response", async (arg) => {
-                    //TODO - set list
-                    console.log(arg.body);
-                    setMessages(await addUsernameToMessages(arg.body));
-                    console.log(messages);
-                });
-                console.log("test chat get all messages");
-                console.log(socket.id);
-                socket.emit("chat:get_all");
+                fetchMessages(socket);
             }
         });
 
@@ -148,7 +165,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             if (socket != undefined) socket.close();
         });
 
-        return unsubscribe;
+        return subscribe;
     }, [navigation, socket]);
 
     return (
@@ -156,7 +173,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             <FlatList
                 style={styles.flatlist}
                 data={messages}
-                keyExtractor={(message) => message.sender.toString()}
+                keyExtractor={(message) => message.messageId.toString()}
                 renderItem={({ item }) => (
                     <ListItem
                         sender={item.sender}
@@ -166,12 +183,21 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                     />
                 )}
             ></FlatList>
-            <TextInput
-                style={styles.input}
-                onChangeText={setNewMessage}
-                placeholder="new message"
-                value={newMessage}
-            />
+            <View style={styles.listRow}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setNewMessage}
+                    placeholder="new message"
+                    value={newMessage}
+                />
+                <TouchableOpacity onPress={sendMessage}>
+                    <Ionicons
+                        name={"send"}
+                        style={styles.button}
+                        size={40}
+                    ></Ionicons>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -200,33 +226,21 @@ const styles = StyleSheet.create({
         fontSize: 25,
         marginTop: 10,
     },
-    avatar: {
-        height: 200,
-        resizeMode: "contain",
-        alignSelf: "center",
-        width: "100%",
-    },
+
     input: {
         height: 40,
         margin: 12,
         borderWidth: 1,
         padding: 10,
         borderRadius: 5,
-    },
-
-    buttonsContainer: {
-        flexDirection: "row",
+        flex: 1,
     },
     button: {
-        flex: 1,
+        flex: 10,
         margin: 12,
-        padding: 12,
-        backgroundColor: "blue",
-        borderRadius: 10,
-    },
-    buttonText: {
-        textAlign: "center",
-        color: "white",
+
+        // width: 5,
+        // height: 5,
     },
     flatlist: {
         flex: 1,
