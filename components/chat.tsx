@@ -85,7 +85,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const connectUser = async () => {
         const token = await AsyncStorage.getItem("accessToken");
         //פתיחת סוקט ללקוח
-        socket = Client("http://192.168.1.231:3000", {
+        socket = Client("http://192.168.1.156:3000", {
             auth: {
                 token: "barrer " + token,
             },
@@ -98,11 +98,11 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         console.log("***********sendMessage**********************");
         console.log(socket);
         if (socket != undefined) {
-            socket.once("chat:message", (arg) => {
-                console.log("new message id === " + arg.res.body._id); // message id
-                fetchMessages(socket);
-                setNewMessage("");
-            });
+            // socket.once("chat:message", (arg) => {
+            //     console.log("new message id === " + arg.res.body._id); // message id
+            //     fetchMessages(socket);
+            //     setNewMessage("");
+            // });
             console.log("test chat send message");
 
             socket.emit("chat:send_message", {
@@ -155,6 +155,12 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         const subscribe = navigation.addListener("focus", async () => {
             console.log("focus");
             socket = await connectUser();
+            //Register to each time that essage sent in the room
+            socket.on("chat:message", (arg) => {
+                console.log("new message id === " + arg.res.body._id); // message id
+                fetchMessages(socket);
+                setNewMessage("");
+            });
             if (socket != undefined) {
                 fetchMessages(socket);
             }
