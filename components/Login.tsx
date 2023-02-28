@@ -3,17 +3,16 @@ import { FC, useState } from "react";
 import {
     View,
     Text,
-    StatusBar,
     StyleSheet,
     TextInput,
     TouchableOpacity,
 } from "react-native";
 import apiClient from "../api/ClientApi";
-import FacebookLogin from "react-facebook-login";
 
 import authModel, { LoginDetails } from "../Model/auth_model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import React from "react";
+// 757213766387-o8n4p7n7jd5mqh8hoe2c5eu05aojo6jo.apps.googleusercontent.com
 const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     route,
     navigation,
@@ -21,6 +20,13 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    React.useEffect(() => {
+        const subscribe = navigation.addListener("focus", async () => {
+            setEmail("");
+            setPassword("");
+        });
+    }, []);
 
     const onLoginCallback = async () => {
         console.log("button was pressed");
@@ -51,12 +57,6 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
         }
     };
 
-    const responseFacebook = (res: any) => {
-        console.log(res);
-    };
-    const componenetClicked = () => {
-        console.log("response");
-    };
     return (
         <View style={styles.container}>
             <Text style={styles.text}> Welcome to my app :)</Text>
@@ -82,15 +82,6 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                     Don't have account? Regiter now
                 </Text>
             </TouchableOpacity>
-            <FacebookLogin
-                appId="904545097477815"
-                autoLoad={true}
-                fields="password,email"
-                callback={responseFacebook}
-                onClick={componenetClicked}
-                cssClass="my-facebook-button-class"
-                icon="fa-facebook"
-            ></FacebookLogin>
         </View>
     );
 };
