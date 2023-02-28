@@ -17,7 +17,6 @@ import {
 
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import StudentDetails from "./StudentDetails";
 
 const PostEdit: FC<{ route: any; navigation: any }> = ({
     route,
@@ -29,7 +28,7 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
     const setDetails = async () => {
         console.log(postId);
         const post = await postModel.getPostById(postId);
-        if (post.status != "200") {
+        if (post.status != "ok") {
             navigation.goBack();
         } else {
             setPostDescription(post.data.post.message);
