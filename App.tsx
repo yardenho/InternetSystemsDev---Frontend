@@ -28,6 +28,7 @@ import apiClient from "./api/ClientApi";
 import MyPostsList from "./components/myPostsList";
 import MyProfile from "./components/myProfile";
 import PostEdit from "./components/editPost";
+import Chat from "./components/chat";
 
 const InfoScreen: FC<{ route: any; navigation: any }> = ({
     route,
@@ -109,13 +110,22 @@ const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
                 component={PostList}
                 options={{
                     headerRight: () => (
-                        <TouchableOpacity onPress={addNewPost}>
-                            <Ionicons
-                                name={"add-outline"}
-                                size={40}
-                                color={"black"}
-                            />
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                            <TouchableOpacity onPress={addNewPost}>
+                                <Ionicons
+                                    name={"add-outline"}
+                                    size={40}
+                                    color={"black"}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={logout}>
+                                <Ionicons
+                                    name={"log-out-outline"}
+                                    size={40}
+                                    color={"black"}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     ),
                 }}
             />
@@ -144,13 +154,22 @@ const MyPostsStackComponent: FC<{ route: any; navigation: any }> = ({
                 component={MyPostsList}
                 options={{
                     headerRight: () => (
-                        <TouchableOpacity onPress={addNewPost}>
-                            <Ionicons
-                                name={"add-outline"}
-                                size={40}
-                                color={"black"}
-                            />
-                        </TouchableOpacity>
+                        <View style={styles.row}>
+                            <TouchableOpacity onPress={addNewPost}>
+                                <Ionicons
+                                    name={"add-outline"}
+                                    size={40}
+                                    color={"black"}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={logout}>
+                                <Ionicons
+                                    name={"log-out-outline"}
+                                    size={40}
+                                    color={"black"}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     ),
                 }}
             />
@@ -162,20 +181,25 @@ const MyPostsStackComponent: FC<{ route: any; navigation: any }> = ({
         </myPostsStack.Navigator>
     );
 };
-
-const updateToken = async (setToken: any) => {
+const logout = async () => {
+    await AsyncStorage.clear();
+    setTokenFunc(null);
+    updateToken();
+};
+let setTokenFunc;
+const updateToken = async () => {
     const token = await AsyncStorage.getItem("accessToken");
-    // await AsyncStorage.clear();
-    console.log("in update token " + token);
     if (token != null) {
         apiClient.setHeader("Authorization", "JWT " + token);
-        return setToken(token);
+        setTokenFunc(token);
+        return;
     }
 };
 
 const App: FC = () => {
     const [token, setToken] = useState();
-    updateToken(setToken);
+    setTokenFunc = setToken;
+    updateToken();
     const Stack = createNativeStackNavigator();
 
     if (!token) {
@@ -225,6 +249,18 @@ const App: FC = () => {
                             />
                         );
                     },
+                    headerRight: () => (
+                        <TouchableOpacity
+                            onPress={logout}
+                            style={{ margin: 3 }}
+                        >
+                            <Ionicons
+                                name={"log-out-outline"}
+                                size={40}
+                                color={"black"}
+                            />
+                        </TouchableOpacity>
+                    ),
                     tabBarActiveTintColor: "tomato",
                     tabBarInactiveTintColor: "gray",
                 })}
@@ -240,7 +276,7 @@ const App: FC = () => {
                     options={{ headerShown: false }}
                 />
                 <Tab.Screen name="My profile" component={MyProfile} />
-                <Tab.Screen name="Chat" component={InfoScreen} />
+                <Tab.Screen name="Chat" component={Chat} />
             </Tab.Navigator>
         </NavigationContainer>
     );
