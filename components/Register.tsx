@@ -20,7 +20,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     navigation,
 }) => {
     const [fullName, setFullName] = useState("");
-    const [username, setUsername] = useState("");
+    const [userEmail, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [avatarUri, setAvatarUri] = useState("url");
 
@@ -37,6 +37,12 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
 
     React.useEffect(() => {
         askPermission();
+        const subscribe = navigation.addListener("focus", async () => {
+            setFullName("");
+            setEmail("");
+            setPassword("");
+            setAvatarUri("url");
+        });
     }, []);
 
     const openCamera = async () => {
@@ -65,7 +71,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     const onRegisterCallback = async () => {
         console.log("button was pressed");
         const details: RegisterDetails = {
-            email: username,
+            email: userEmail,
             password: password,
             fullName: fullName,
             image: "url",
@@ -127,9 +133,9 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={setUsername}
-                    value={username}
-                    placeholder="Username"
+                    onChangeText={setEmail}
+                    value={userEmail}
+                    placeholder="Email"
                 />
                 <TextInput
                     style={styles.input}
