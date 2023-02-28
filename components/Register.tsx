@@ -23,6 +23,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     const [userEmail, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [avatarUri, setAvatarUri] = useState("url");
+    const [error, setError] = useState(false);
 
     const askPermission = async () => {
         try {
@@ -70,6 +71,10 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
 
     const onRegisterCallback = async () => {
         console.log("button was pressed");
+        if (userEmail == "" || password == "" || fullName == "") {
+            setError(true);
+            return;
+        }
         const details: RegisterDetails = {
             email: userEmail,
             password: password,
@@ -155,6 +160,17 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
                         Have an account? Login now
                     </Text>
                 </TouchableOpacity>
+                {error && (
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            color: "red",
+                            alignSelf: "center",
+                        }}
+                    >
+                        Please enter a valid fields
+                    </Text>
+                )}
             </View>
         </ScrollView>
     );

@@ -20,6 +20,7 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
     React.useEffect(() => {
         const subscribe = navigation.addListener("focus", async () => {
@@ -31,6 +32,10 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     const onLoginCallback = async () => {
         console.log("button was pressed");
         //TODO - check if username, password arent empty
+        if (email == "" || password == "") {
+            setError(true);
+            return;
+        }
         const details: LoginDetails = {
             email: email,
             password: password,
@@ -82,6 +87,17 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                     Don't have account? Regiter now
                 </Text>
             </TouchableOpacity>
+            {error && (
+                <Text
+                    style={{
+                        fontSize: 20,
+                        color: "red",
+                        alignSelf: "center",
+                    }}
+                >
+                    Please enter a valid fields
+                </Text>
+            )}
         </View>
     );
 };
