@@ -6,11 +6,9 @@ import {
     View,
     Image,
     TouchableOpacity,
-    Button,
-    Alert,
-    TextInput,
     FlatList,
     TouchableHighlight,
+    ActivityIndicator,
 } from "react-native";
 import React from "react";
 import postModel, { Post } from "../Model/post_model";
@@ -108,6 +106,7 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
     navigation,
 }) => {
     const [posts, setPosts] = useState<Array<Post>>();
+    const [proccess, setProccess] = useState(false);
 
     const onEdit = async (postId: String) => {
         navigation.navigate("PostEdit", { postId: postId });
@@ -119,43 +118,62 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
             const userId = await AsyncStorage.getItem("userId");
             if (!userId) {
                 console.log("fail fetching my posts "); // TODO
+                setProccess(false);
                 return;
             }
             posts = await postModel.getAllUserPosts(userId);
         } catch (err) {
             console.log("fail fetching my posts " + err);
+            setProccess(false);
         }
         setPosts(posts);
+        setProccess(false);
     };
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener("focus", async () => {
+            setProccess(true);
             await fetchMyPosts();
         });
         return unsubscribe;
     }, []);
 
     return (
-        <FlatList
-            style={styles.flatlist}
-            data={posts}
-            keyExtractor={(post) => post.postId.toString()}
-            renderItem={({ item }) => (
-                <ListItem
-                    name={item.username}
-                    description={item.message}
-                    image={item.image}
-                    userImage={item.userImage}
-                    postId={item.postId}
-                    onDelete={fetchMyPosts}
-                    onEdit={onEdit}
-                />
-            )}
-        ></FlatList>
+        <View style={styles.container}>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 130,
+                    marginLeft: 130,
+                }}
+            />
+            <FlatList
+                style={styles.flatlist}
+                data={posts}
+                keyExtractor={(post) => post.postId.toString()}
+                renderItem={({ item }) => (
+                    <ListItem
+                        name={item.username}
+                        description={item.message}
+                        image={item.image}
+                        userImage={item.userImage}
+                        postId={item.postId}
+                        onDelete={fetchMyPosts}
+                        onEdit={onEdit}
+                    />
+                )}
+            ></FlatList>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     list: {
         margin: 4,
         flex: 1,
@@ -182,12 +200,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     userName: {
-        fontSize: 25,
-        marginTop: 10,
+        fontSize: 21,
+        fontWeight: "bold",
+        marginTop: 17,
     },
     postContext: {
-        fontSize: 20,
-        margin: 4,
+        fontSize: 22,
+        margin: 10,
     },
     flatlist: {
         flex: 1,

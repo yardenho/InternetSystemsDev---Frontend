@@ -11,6 +11,7 @@ import {
     TextInput,
     FlatList,
     TouchableHighlight,
+    ActivityIndicator,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -71,6 +72,7 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
     navigation,
 }) => {
     const [posts, setPosts] = useState<Array<Post>>();
+    const [proccess, setProccess] = useState(false);
 
     const fetchPosts = async () => {
         let posts: Post[] = [];
@@ -80,33 +82,50 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
             console.log("fail fetching posts " + err);
         }
         setPosts(posts);
+        setProccess(false);
     };
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener("focus", async () => {
+            setProccess(true);
             await fetchPosts();
         });
         return unsubscribe;
     }, []);
 
     return (
-        <FlatList
-            style={styles.flatlist}
-            data={posts}
-            keyExtractor={(post) => post.postId.toString()}
-            renderItem={({ item }) => (
-                <ListItem
-                    name={item.username}
-                    description={item.message}
-                    image={item.image}
-                    userImage={item.userImage}
-                />
-            )}
-        ></FlatList>
+        <View style={styles.container}>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 130,
+                    marginLeft: 130,
+                }}
+            />
+            <FlatList
+                style={styles.flatlist}
+                data={posts}
+                keyExtractor={(post) => post.postId.toString()}
+                renderItem={({ item }) => (
+                    <ListItem
+                        name={item.username}
+                        description={item.message}
+                        image={item.image}
+                        userImage={item.userImage}
+                    />
+                )}
+            ></FlatList>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     listRow1: {
         margin: 4,
         flex: 1,
@@ -133,12 +152,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     userName: {
-        fontSize: 25,
-        marginTop: 10,
+        fontSize: 21,
+        fontWeight: "bold",
+        marginTop: 17,
     },
     postContext: {
-        fontSize: 20,
-        margin: 4,
+        fontSize: 22,
+        margin: 10,
     },
     flatlist: {
         flex: 1,

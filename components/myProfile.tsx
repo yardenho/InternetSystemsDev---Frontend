@@ -8,11 +8,10 @@ import {
     View,
     Image,
     TouchableOpacity,
-    Button,
-    Alert,
     TextInput,
     StatusBar,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
@@ -31,6 +30,8 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
     const [userEmail, setEmail] = useState("");
     const [userPassword, setPassword] = useState(DefaultPassword);
     const [editable, setEditable] = useState(false);
+    const [proccess, setProccess] = useState(false);
+    const [error, setError] = useState(false);
 
     const updateDetails = async () => {
         const currentUserId = await AsyncStorage.getItem("userId");
@@ -42,11 +43,20 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
             setFullName(user.fullName);
             setAvatarUri(user.image);
             setEmail(user.email);
+            setProccess(false);
+        } else {
+            setProccess(false);
+            setError(true);
         }
     };
 
     React.useEffect(() => {
-        updateDetails();
+        const subscribe = navigation.addListener("focus", async () => {
+            setProccess(true);
+            setError(false);
+            setEditable(false);
+            updateDetails();
+        });
     }, []);
 
     const askPermission = async () => {
@@ -88,6 +98,8 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
     };
 
     const onCancelCallback = async () => {
+        updateDetails();
+        setError(false);
         setEditable(false);
     };
 
@@ -97,6 +109,11 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
             setEditable(true);
             return;
         }
+        if (userFullname == "" || userPassword == "") {
+            setError(true);
+            return;
+        }
+        setProccess(true);
 
         let newDetails;
         if (userPassword != DefaultPassword) {
@@ -127,18 +144,32 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                 console.log("posted");
                 setEditable(false);
                 setPassword(DefaultPassword);
+                setProccess(false);
             } else {
                 console.log("fail updation user");
+                setProccess(false);
+                setError(true);
             }
         } catch (err) {
             console.log("fail updation user");
+            setProccess(false);
+            setError(true);
         }
-        // navigation.goBack(); // TODO - what after saving ??
     };
 
     return (
         <ScrollView>
             <View style={styles.container}>
+                <ActivityIndicator
+                    size={180}
+                    color="#5c9665"
+                    animating={proccess}
+                    style={{
+                        position: "absolute",
+                        marginTop: 200,
+                        marginLeft: 120,
+                    }}
+                />
                 <View>
                     {userAvatarUri == "url" && (
                         <Image
@@ -217,6 +248,17 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                             </Text>
                         </TouchableOpacity>
                     </View>
+                )}
+                {error && (
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            color: "red",
+                            alignSelf: "center",
+                        }}
+                    >
+                        Error occure :(
+                    </Text>
                 )}
             </View>
         </ScrollView>

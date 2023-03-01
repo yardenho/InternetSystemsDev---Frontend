@@ -8,8 +8,6 @@ import {
     View,
     Image,
     TouchableOpacity,
-    Button,
-    Alert,
     TextInput,
     StatusBar,
     ScrollView,
@@ -24,11 +22,14 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
 }) => {
     const [postDescription, setPostDescription] = useState("");
     const [avatarUri, setAvatarUri] = useState("url");
+    const [error, setError] = useState(false);
+
     let postId = route.params.postId;
     const setDetails = async () => {
         console.log(postId);
         const post = await postModel.getPostById(postId);
-        if (post.status != "ok") {
+        console.log(post);
+        if (post.status != 200) {
             navigation.goBack();
         } else {
             setPostDescription(post.data.post.message);
@@ -76,6 +77,12 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
 
     const onSaveCallback = async () => {
         console.log("button was pressed");
+
+        if (postDescription == "" || avatarUri == "") {
+            setError(true);
+            return;
+        }
+
         const post: newPost = {
             message: postDescription,
             image: "url",
@@ -150,6 +157,17 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
                         <Text style={styles.buttonText}>SAVE</Text>
                     </TouchableOpacity>
                 </View>
+                {error && (
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            color: "red",
+                            alignSelf: "center",
+                        }}
+                    >
+                        Please enter image and description
+                    </Text>
+                )}
             </View>
         </ScrollView>
     );

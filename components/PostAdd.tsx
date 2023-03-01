@@ -38,9 +38,6 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
             console.log("ask permission error " + err);
         }
     };
-    React.useEffect(() => {
-        askPermission();
-    }, []);
 
     const openCamera = async () => {
         try {
@@ -153,7 +150,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
                             alignSelf: "center",
                         }}
                     >
-                        Please enter a valid fields
+                        Please enter image and description
                     </Text>
                 )}
             </View>
@@ -179,7 +176,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
-
     buttonsContainer: {
         flexDirection: "row",
     },

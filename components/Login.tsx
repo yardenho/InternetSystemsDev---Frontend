@@ -6,6 +6,7 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
+    ActivityIndicator,
 } from "react-native";
 import apiClient from "../api/ClientApi";
 
@@ -20,7 +21,8 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
+    const [proccess, setProccess] = useState(false);
 
     React.useEffect(() => {
         const subscribe = navigation.addListener("focus", async () => {
@@ -30,10 +32,12 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     }, []);
 
     const onLoginCallback = async () => {
+        setProccess(true);
         console.log("button was pressed");
         //TODO - check if username, password arent empty
         if (email == "" || password == "") {
-            setError(true);
+            setProccess(false);
+            setError("Please enter email and password");
             return;
         }
         const details: LoginDetails = {
@@ -43,8 +47,10 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 
         try {
             const res = await authModel.userLogin(details);
-            if (!res) {
+            if (res == null) {
                 console.log("returned status 400");
+                setProccess(false);
+                setError("Cannot login, please try again");
                 return;
             }
             setTokenFunc(res.tokens.accessToken);
@@ -56,14 +62,23 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
             await AsyncStorage.setItem("refreshToken", res.tokens.refreshToken);
             await AsyncStorage.setItem("userId", res.userId);
             console.log("posted");
+            setProccess(false);
         } catch (err) {
             console.log("fail login");
+            setProccess(false);
+            setError("Cannot login, please try again");
             console.log(err);
         }
     };
 
     return (
         <View style={styles.container}>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{ position: "absolute", marginTop: 75 }}
+            />
             <Text style={styles.text}> Welcome to my app :)</Text>
             <Text style={styles.text}>LOGIN !</Text>
             <TextInput
@@ -87,7 +102,8 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                     Don't have account? Regiter now
                 </Text>
             </TouchableOpacity>
-            {error && (
+
+            {error != "" && (
                 <Text
                     style={{
                         fontSize: 20,
@@ -95,7 +111,7 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                         alignSelf: "center",
                     }}
                 >
-                    Please enter a valid fields
+                    {error}
                 </Text>
             )}
         </View>
@@ -123,7 +139,7 @@ const styles = StyleSheet.create({
     button: {
         margin: 12,
         padding: 12,
-        backgroundColor: "blue",
+        backgroundColor: "#7cab83",
         borderRadius: 10,
         width: 150,
     },

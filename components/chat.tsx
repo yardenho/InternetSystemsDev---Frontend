@@ -12,6 +12,7 @@ import {
     StatusBar,
     FlatList,
     TouchableHighlight,
+    ActivityIndicator,
 } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -36,14 +37,14 @@ const ListItem: FC<{
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View
                 style={{
-                    margin: 10,
+                    margin: 5,
                     flex: 1,
                     elevation: 1,
-                    borderRadius: 3,
+                    borderRadius: 8,
                     backgroundColor:
-                        senderId == currentUserId ? "green" : "grey",
-                    marginRight: senderId == currentUserId ? 0 : 20,
-                    marginLeft: senderId == currentUserId ? 20 : 0,
+                        senderId == currentUserId ? "#6ca074" : "#b2b2b2",
+                    marginRight: senderId == currentUserId ? 10 : 50,
+                    marginLeft: senderId == currentUserId ? 40 : 10,
                 }}
             >
                 <Text style={styles.userName}>{sender}</Text>
@@ -71,6 +72,7 @@ const ListItem: FC<{
 const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const [messages, setMessages] = useState<Array<Message>>();
     const [newMessage, setNewMessage] = useState("");
+    const [proccess, setProccess] = useState(false);
 
     const clientSocketConnect = (
         clientSocket: Socket<DefaultEventsMap, DefaultEventsMap>
@@ -98,13 +100,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         console.log("***********sendMessage**********************");
         console.log(socket);
         if (socket != undefined) {
-            // socket.once("chat:message", (arg) => {
-            //     console.log("new message id === " + arg.res.body._id); // message id
-            //     fetchMessages(socket);
-            //     setNewMessage("");
-            // });
             console.log("test chat send message");
-
             socket.emit("chat:send_message", {
                 message: newMessage,
             });
@@ -130,6 +126,8 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                 messages.push(mes);
             }
         }
+        setProccess(false);
+
         return messages;
     };
 
@@ -137,8 +135,11 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         socket.once("chat:get_all.response", async (arg: any) => {
             //TODO - set list
             console.log(arg.body);
+            setProccess(true);
+
             setMessages(await addUsernameToMessages(arg.body));
             console.log(messages);
+            setProccess(false);
         });
         console.log("test chat get all messages");
         console.log(socket.id);
@@ -155,7 +156,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         const subscribe = navigation.addListener("focus", async () => {
             console.log("focus");
             socket = await connectUser();
-            //Register to each time that essage sent in the room
+            //Register to each time that message sent in the room
             socket.on("chat:message", (arg) => {
                 console.log("new message id === " + arg.res.body._id); // message id
                 fetchMessages(socket);
@@ -176,6 +177,16 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 250,
+                    marginLeft: 100,
+                }}
+            />
             <FlatList
                 style={styles.flatlist}
                 data={messages}
@@ -244,9 +255,6 @@ const styles = StyleSheet.create({
     button: {
         flex: 10,
         margin: 12,
-
-        // width: 5,
-        // height: 5,
     },
     flatlist: {
         flex: 1,

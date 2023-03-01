@@ -107,7 +107,10 @@ const MyPostsStackComponent: FC<{ route: any; navigation: any }> = ({
     );
 };
 const logout = async () => {
-    await authModel.logout();
+    const res = await authModel.logout();
+    if (res == null) {
+        alert("cannot log out");
+    }
     await AsyncStorage.clear();
     setTokenFunc(null);
     updateToken();

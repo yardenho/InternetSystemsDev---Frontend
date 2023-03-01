@@ -19,7 +19,7 @@ const userLogin = async (loginDetails: LoginDetails) => {
     console.log("login()");
     const res: any = await authApi.login(loginDetails);
     console.log(res);
-    if (res.status == 400) {
+    if (res.status != 200) {
         console.log(res.data.error);
         console.log("error in login");
         return null; //?????????/
@@ -30,7 +30,8 @@ const userLogin = async (loginDetails: LoginDetails) => {
 const userRegister = async (loginDetails: RegisterDetails) => {
     console.log("register()");
     const res: any = await authApi.register(loginDetails);
-    if (res.status == 400) {
+    if (res.status != 200) {
+        console.log(res);
         console.log("error in register");
         return null; //?????????/
     }
@@ -45,10 +46,10 @@ const refreshToken = async () => {
     apiClient.setHeader("Authorization", "JWT " + token);
 
     const res: any = await authApi.refresh();
-    if (res.status == 400) {
+    if (res.status != 200) {
         console.log("error in refresh");
         console.log(res);
-        return; //?????????/ TODO
+        return null; //?????????/ TODO
     }
     console.log("end refresh");
     console.log(res);
@@ -64,11 +65,12 @@ const logout = async () => {
     console.log(token);
     apiClient.setHeader("Authorization", "JWT " + token);
     const res: any = await authApi.logout();
-    if (res.status == 400) {
+    if (res.status != 200) {
         console.log("error in logout");
-        return; //?????????/ TODO
+        return null; //?????????/ TODO
     }
     console.log("finish in logout");
+    return res;
 };
 
 export default { userLogin, userRegister, refreshToken, logout };
