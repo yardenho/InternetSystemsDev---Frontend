@@ -138,6 +138,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
             if (avatarUri != "url") {
                 console.log("trying upload image");
                 const url = await postModel.uploadImage(avatarUri); // TODO - do i need to change the postModel ???
+
                 details.image = url;
             }
             const res = await authModel.userRegister(details);
@@ -165,16 +166,6 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
     return (
         <ScrollView>
             <View style={styles.container}>
-                <ActivityIndicator
-                    size={180}
-                    color="#5c9665"
-                    animating={proccess}
-                    style={{
-                        position: "absolute",
-                        marginTop: 250,
-                        marginLeft: 100,
-                    }}
-                />
                 <View>
                     <Text style={styles.text}>REGISTER !</Text>
                     {avatarUri == "url" && (
@@ -258,8 +249,20 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
                             alignSelf: "center",
                         }}
                     ></Image>
-                    <Text style={styles.toRegisterText}>login with google</Text>
+                    <Text style={styles.toRegisterText}>
+                        Register with google
+                    </Text>
                 </TouchableOpacity>
+                <ActivityIndicator
+                    size={180}
+                    color="#5c9665"
+                    animating={proccess}
+                    style={{
+                        position: "absolute",
+                        marginTop: 250,
+                        marginLeft: 100,
+                    }}
+                />
             </View>
         </ScrollView>
     );
@@ -307,8 +310,8 @@ const styles = StyleSheet.create({
         color: "white",
     },
     toRegisterText: {
-        fontSize: 17,
-        color: "black",
+        fontSize: 15,
+        color: "#01579B",
         alignSelf: "center",
         marginLeft: 5,
     },

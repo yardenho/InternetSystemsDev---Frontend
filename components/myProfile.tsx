@@ -52,7 +52,7 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
 
     React.useEffect(() => {
         const subscribe = navigation.addListener("focus", async () => {
-            setProccess(true);
+            setProccess(false);
             setError(false);
             setEditable(false);
             updateDetails();
@@ -135,6 +135,8 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
             if (userAvatarUri != "url") {
                 console.log("trying upload image");
                 const url = await postModel.uploadImage(userAvatarUri); // TODO - cange from postModel to userModel ??
+                console.log(url);
+
                 newDetails.image = url;
             }
             const currentUserId = await AsyncStorage.getItem("userId");
@@ -160,16 +162,6 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
     return (
         <ScrollView>
             <View style={styles.container}>
-                <ActivityIndicator
-                    size={180}
-                    color="#5c9665"
-                    animating={proccess}
-                    style={{
-                        position: "absolute",
-                        marginTop: 200,
-                        marginLeft: 120,
-                    }}
-                />
                 <View>
                     {userAvatarUri == "url" && (
                         <Image
@@ -260,6 +252,16 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                         Error occure :(
                     </Text>
                 )}
+                <ActivityIndicator
+                    size={180}
+                    color="#5c9665"
+                    animating={proccess}
+                    style={{
+                        position: "absolute",
+                        marginTop: 200,
+                        marginLeft: 120,
+                    }}
+                />
             </View>
         </ScrollView>
     );

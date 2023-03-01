@@ -127,15 +127,15 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             }
         }
         setProccess(false);
-
         return messages;
     };
 
     const fetchMessages = (socket: any) => {
+        setProccess(true);
+
         socket.once("chat:get_all.response", async (arg: any) => {
             //TODO - set list
             console.log(arg.body);
-            setProccess(true);
 
             setMessages(await addUsernameToMessages(arg.body));
             console.log(messages);
@@ -152,10 +152,13 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     };
 
     React.useEffect(() => {
+        setProccess(true);
         updateUserId();
         const subscribe = navigation.addListener("focus", async () => {
             console.log("focus");
             socket = await connectUser();
+            setProccess(true);
+
             //Register to each time that message sent in the room
             socket.on("chat:message", (arg) => {
                 console.log("new message id === " + arg.res.body._id); // message id
@@ -165,10 +168,13 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             if (socket != undefined) {
                 fetchMessages(socket);
             }
+            setProccess(false);
         });
 
         const unsubscribe = navigation.addListener("blur", () => {
             console.log("unfocus");
+            setProccess(false);
+
             if (socket != undefined) socket.close();
         });
 
@@ -177,16 +183,6 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <ActivityIndicator
-                size={180}
-                color="#5c9665"
-                animating={proccess}
-                style={{
-                    position: "absolute",
-                    marginTop: 250,
-                    marginLeft: 100,
-                }}
-            />
             <FlatList
                 style={styles.flatlist}
                 data={messages}
@@ -215,6 +211,16 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                     ></Ionicons>
                 </TouchableOpacity>
             </View>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 200,
+                    marginLeft: 100,
+                }}
+            />
         </View>
     );
 };
@@ -240,8 +246,10 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     messageText: {
-        fontSize: 25,
-        marginTop: 10,
+        fontSize: 21,
+        marginTop: 4,
+        marginLeft: 1,
+        marginRight: 30,
     },
 
     input: {

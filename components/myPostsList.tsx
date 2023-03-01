@@ -61,7 +61,7 @@ const ListItem: FC<{
 
                     <Text style={styles.userName}>{name}</Text>
                     <TouchableOpacity
-                        style={{ left: 110, marginTop: 5 }}
+                        style={{ left: 160, marginTop: 5 }}
                         onPress={onDeletePress}
                     >
                         <AntDesign
@@ -71,7 +71,7 @@ const ListItem: FC<{
                         ></AntDesign>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={{ left: 110, margin: 5 }}
+                        style={{ left: 160, margin: 5 }}
                         onPress={onEditPress}
                     >
                         <AntDesign
@@ -140,16 +140,6 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
 
     return (
         <View style={styles.container}>
-            <ActivityIndicator
-                size={180}
-                color="#5c9665"
-                animating={proccess}
-                style={{
-                    position: "absolute",
-                    marginTop: 130,
-                    marginLeft: 130,
-                }}
-            />
             <FlatList
                 style={styles.flatlist}
                 data={posts}
@@ -166,6 +156,16 @@ const MyPostsList: FC<{ route: any; navigation: any }> = ({
                     />
                 )}
             ></FlatList>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 130,
+                    marginLeft: 130,
+                }}
+            />
         </View>
     );
 };

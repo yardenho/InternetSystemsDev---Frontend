@@ -28,6 +28,8 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
         const subscribe = navigation.addListener("focus", async () => {
             setEmail("");
             setPassword("");
+            setError("");
+            setProccess(false);
         });
     }, []);
 
@@ -73,12 +75,6 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
 
     return (
         <View style={styles.container}>
-            <ActivityIndicator
-                size={180}
-                color="#5c9665"
-                animating={proccess}
-                style={{ position: "absolute", marginTop: 75 }}
-            />
             <Text style={styles.text}> Welcome to my app :)</Text>
             <Text style={styles.text}>LOGIN !</Text>
             <TextInput
@@ -114,6 +110,12 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
                     {error}
                 </Text>
             )}
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{ position: "absolute", marginTop: 75 }}
+            />
         </View>
     );
 };

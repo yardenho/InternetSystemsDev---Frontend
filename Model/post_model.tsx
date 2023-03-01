@@ -104,6 +104,7 @@ const uploadImage = async (imageURI: String) => {
         const res = await postApi.uploadImage(body);
         if (!res.ok) {
             console.log("save failed " + res.problem);
+            return "url";
         } else {
             if (res.data) {
                 const d: any = res.data;
@@ -114,7 +115,6 @@ const uploadImage = async (imageURI: String) => {
     } catch (err) {
         console.log("save failed " + err);
     }
-    return "";
 };
 
 export default {

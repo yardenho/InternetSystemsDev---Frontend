@@ -11,6 +11,7 @@ import {
     TextInput,
     StatusBar,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
@@ -23,9 +24,11 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
     const [postDescription, setPostDescription] = useState("");
     const [avatarUri, setAvatarUri] = useState("url");
     const [error, setError] = useState(false);
+    const [proccess, setProccess] = useState(false);
 
     let postId = route.params.postId;
     const setDetails = async () => {
+        setProccess(true);
         console.log(postId);
         const post = await postModel.getPostById(postId);
         console.log(post);
@@ -34,6 +37,7 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
         } else {
             setPostDescription(post.data.post.message);
             setAvatarUri(post.data.post.image);
+            setProccess(false);
         }
     };
 
@@ -82,6 +86,7 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
             setError(true);
             return;
         }
+        setProccess(true);
 
         const post: newPost = {
             message: postDescription,
@@ -94,6 +99,7 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
                 post.image = url;
             }
             await postModel.editPostById(postId, post);
+            setProccess(false);
             console.log("posted");
         } catch (err) {
             console.log("fail adding post");
@@ -105,71 +111,79 @@ const PostEdit: FC<{ route: any; navigation: any }> = ({
     };
 
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View>
-                    {avatarUri == "url" && (
-                        <Image
-                            style={styles.avatar}
-                            source={require("../assets/avatar.png")}
-                        ></Image>
-                    )}
-                    {avatarUri != "url" && (
-                        <Image
-                            style={styles.avatar}
-                            source={{ uri: avatarUri }}
-                        ></Image>
-                    )}
-
-                    <TouchableOpacity onPress={openCamera}>
-                        <Ionicons
-                            name={"camera"}
-                            style={styles.cameraButton}
-                            size={50}
-                        ></Ionicons>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={openGallery}>
-                        <Ionicons
-                            name={"image"}
-                            style={styles.galleryBotton}
-                            size={50}
-                        ></Ionicons>
-                    </TouchableOpacity>
-                </View>
-
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setPostDescription}
-                    placeholder="Description"
-                    value={postDescription}
-                />
-                <View style={styles.buttonsContainer}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={onCancleCallback}
-                    >
-                        <Text style={styles.buttonText}>CANCLE</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={onSaveCallback}
-                    >
-                        <Text style={styles.buttonText}>SAVE</Text>
-                    </TouchableOpacity>
-                </View>
-                {error && (
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            color: "red",
-                            alignSelf: "center",
-                        }}
-                    >
-                        Please enter image and description
-                    </Text>
+        <View style={styles.container}>
+            <View>
+                {avatarUri == "url" && (
+                    <Image
+                        style={styles.avatar}
+                        source={require("../assets/avatar.png")}
+                    ></Image>
                 )}
+                {avatarUri != "url" && (
+                    <Image
+                        style={styles.avatar}
+                        source={{ uri: avatarUri }}
+                    ></Image>
+                )}
+
+                <TouchableOpacity onPress={openCamera}>
+                    <Ionicons
+                        name={"camera"}
+                        style={styles.cameraButton}
+                        size={50}
+                    ></Ionicons>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={openGallery}>
+                    <Ionicons
+                        name={"image"}
+                        style={styles.galleryBotton}
+                        size={50}
+                    ></Ionicons>
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+
+            <TextInput
+                style={styles.input}
+                onChangeText={setPostDescription}
+                placeholder="Description"
+                value={postDescription}
+            />
+            <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={onCancleCallback}
+                >
+                    <Text style={styles.buttonText}>CANCLE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={onSaveCallback}
+                >
+                    <Text style={styles.buttonText}>SAVE</Text>
+                </TouchableOpacity>
+            </View>
+            {error && (
+                <Text
+                    style={{
+                        fontSize: 20,
+                        color: "red",
+                        alignSelf: "center",
+                    }}
+                >
+                    Please enter image and description
+                </Text>
+            )}
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 250,
+                    marginLeft: 100,
+                }}
+            />
+        </View>
     );
 };
 

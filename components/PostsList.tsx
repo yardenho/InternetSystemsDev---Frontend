@@ -88,6 +88,7 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
     React.useEffect(() => {
         const unsubscribe = navigation.addListener("focus", async () => {
             setProccess(true);
+            setPosts([]);
             await fetchPosts();
         });
         return unsubscribe;
@@ -95,16 +96,6 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
 
     return (
         <View style={styles.container}>
-            <ActivityIndicator
-                size={180}
-                color="#5c9665"
-                animating={proccess}
-                style={{
-                    position: "absolute",
-                    marginTop: 130,
-                    marginLeft: 130,
-                }}
-            />
             <FlatList
                 style={styles.flatlist}
                 data={posts}
@@ -118,6 +109,16 @@ const PostsList: FC<{ route: any; navigation: any }> = ({
                     />
                 )}
             ></FlatList>
+            <ActivityIndicator
+                size={180}
+                color="#5c9665"
+                animating={proccess}
+                style={{
+                    position: "absolute",
+                    marginTop: 130,
+                    marginLeft: 130,
+                }}
+            />
         </View>
     );
 };

@@ -49,6 +49,7 @@ const uploadImage = async (imageURI: String) => {
         const res = await studentApi.uploadImage(body);
         if (!res.ok) {
             console.log("save failed " + res.problem);
+            return "url";
         } else {
             if (res.data) {
                 const d: any = res.data;

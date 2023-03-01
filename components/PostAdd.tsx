@@ -13,6 +13,7 @@ import {
     TextInput,
     StatusBar,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
@@ -25,6 +26,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
     const [postDescription, setPostDescription] = useState("");
     const [avatarUri, setAvatarUri] = useState("");
     const [error, setError] = useState(false);
+    const [proccess, setProccess] = useState(false);
 
     console.log("my app is running");
 
@@ -38,7 +40,12 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
             console.log("ask permission error " + err);
         }
     };
-
+    React.useEffect(() => {
+        const subscribe = navigation.addListener("focus", async () => {
+            setProccess(false);
+            setError(false);
+        });
+    }, []);
     const openCamera = async () => {
         try {
             const res = await ImagePicker.launchCameraAsync();
@@ -68,6 +75,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
             setError(true);
             return;
         }
+        setProccess(true);
         const post: newPost = {
             message: postDescription,
             image: "url",
@@ -76,9 +84,11 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
             if (avatarUri != "") {
                 console.log("trying upload image");
                 const url = await postModel.uploadImage(avatarUri);
+
                 post.image = url;
             }
             await postModel.addPost(post);
+            setProccess(false);
             console.log("posted");
         } catch (err) {
             console.log("fail adding post");
@@ -153,6 +163,16 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
                         Please enter image and description
                     </Text>
                 )}
+                <ActivityIndicator
+                    size={180}
+                    color="#5c9665"
+                    animating={proccess}
+                    style={{
+                        position: "absolute",
+                        marginTop: 200,
+                        marginLeft: 120,
+                    }}
+                />
             </View>
         </ScrollView>
     );
