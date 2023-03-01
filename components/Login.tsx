@@ -36,7 +36,6 @@ const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     const onLoginCallback = async () => {
         setProccess(true);
         console.log("button was pressed");
-        //TODO - check if username, password arent empty
         if (email == "" || password == "") {
             setProccess(false);
             setError("Please enter email and password");

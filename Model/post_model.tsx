@@ -43,13 +43,7 @@ const createPostsList = async (res: any) => {
 const getAllPosts = async () => {
     console.log("getAllPosts()");
     const res: any = await postApi.getAllPosts();
-    // if (res.status == 401) { TODO
-    //     //token expired
-    //     // TODO - refresh token, saving it and try again
-    // }
     return createPostsList(res);
-    // return updatingUsersNames(posts);
-    // return posts;
 };
 
 const getPostById = async (PostId: String) => {
@@ -66,10 +60,6 @@ const editPostById = async (postId: String, Post: any) => {
 const getAllUserPosts = async (userId: string) => {
     console.log("getAllUserPosts()");
     let res: any = await postApi.getAllUserPosts(userId);
-    // if (res.status == 401) { TODO
-    //     //token expired
-    //     // TODO - refresh token, saving it and try again
-    // }
     return createPostsList(res);
 };
 

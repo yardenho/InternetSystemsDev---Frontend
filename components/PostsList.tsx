@@ -27,7 +27,6 @@ const ListItem: FC<{
     image: String;
     userImage: String;
 }> = ({ name, description, image, userImage }) => {
-    //TODO - fix style of the first View
     return (
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View style={styles.listRow1}>

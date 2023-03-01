@@ -134,7 +134,7 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
         try {
             if (userAvatarUri != "url") {
                 console.log("trying upload image");
-                const url = await postModel.uploadImage(userAvatarUri); // TODO - cange from postModel to userModel ??
+                const url = await postModel.uploadImage(userAvatarUri);
                 console.log(url);
 
                 newDetails.image = url;

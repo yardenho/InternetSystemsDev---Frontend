@@ -2,7 +2,6 @@ import authApi from "../api/authApi";
 import apiClient from "../api/ClientApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-//TODO - fix the types - needs them both??
 export type LoginDetails = {
     email: String;
     password: String;

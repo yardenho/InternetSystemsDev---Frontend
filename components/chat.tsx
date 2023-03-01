@@ -32,7 +32,6 @@ const ListItem: FC<{
     image: String;
     senderId: String;
 }> = ({ sender, message, image, senderId }) => {
-    //TODO - fix style of the first View
     return (
         <TouchableHighlight underlayColor={"gainsboro"}>
             <View
@@ -134,9 +133,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
         setProccess(true);
 
         socket.once("chat:get_all.response", async (arg: any) => {
-            //TODO - set list
             console.log(arg.body);
-
             setMessages(await addUsernameToMessages(arg.body));
             console.log(messages);
             setProccess(false);

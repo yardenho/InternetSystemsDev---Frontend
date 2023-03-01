@@ -137,7 +137,7 @@ const RegisterPage: FC<{ route: any; navigation: any }> = ({
         try {
             if (avatarUri != "url") {
                 console.log("trying upload image");
-                const url = await postModel.uploadImage(avatarUri); // TODO - do i need to change the postModel ???
+                const url = await postModel.uploadImage(avatarUri);
 
                 details.image = url;
             }
