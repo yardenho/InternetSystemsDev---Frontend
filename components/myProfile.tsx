@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 
 import React from "react";
-import postModel, { newPost, Post } from "../Model/post_model";
+import postModel from "../Model/post_model";
 import {
     StyleSheet,
     Text,

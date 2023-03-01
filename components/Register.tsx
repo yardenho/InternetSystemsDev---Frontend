@@ -9,9 +9,8 @@ import {
     ScrollView,
     StatusBar,
     ActivityIndicator,
-    ToastAndroid,
 } from "react-native";
-import authModel, { LoginDetails, RegisterDetails } from "../Model/auth_model";
+import authModel, { RegisterDetails } from "../Model/auth_model";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";

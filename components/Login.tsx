@@ -1,4 +1,3 @@
-import { useLinkProps } from "@react-navigation/native";
 import { FC, useState } from "react";
 import {
     View,
@@ -13,7 +12,6 @@ import apiClient from "../api/ClientApi";
 import authModel, { LoginDetails } from "../Model/auth_model";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-// 757213766387-o8n4p7n7jd5mqh8hoe2c5eu05aojo6jo.apps.googleusercontent.com
 const LoginPage: FC<{ route: any; navigation: any; setTokenFunc: any }> = ({
     route,
     navigation,

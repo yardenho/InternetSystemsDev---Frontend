@@ -5,21 +5,12 @@ import {
     Text,
     View,
     Image,
-    TouchableOpacity,
-    Button,
-    Alert,
-    TextInput,
     FlatList,
     TouchableHighlight,
     ActivityIndicator,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import postModel, { Post } from "../Model/post_model";
-import userModel from "../Model/user_model";
 
 const ListItem: FC<{
     name: String;

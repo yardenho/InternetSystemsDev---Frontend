@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 
 import React from "react";
-import postModel, { newPost, Post } from "../Model/post_model";
+import { newPost, Post } from "../Model/post_model";
 import {
     StyleSheet,
     Text,
@@ -20,7 +20,6 @@ import Client, { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../Model/chat_model";
-import * as io from "socket.io-client";
 import userModel from "../Model/user_model";
 
 let currentUserId: String | null;

@@ -10,7 +10,6 @@ import {
     TouchableOpacity,
     TextInput,
     StatusBar,
-    ScrollView,
     ActivityIndicator,
 } from "react-native";
 
