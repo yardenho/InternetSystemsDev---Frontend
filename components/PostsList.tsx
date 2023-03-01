@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     postImage: {
-        height: 130,
-        width: 130,
+        height: 300,
+        width: 300,
         alignSelf: "center",
     },
     listRowTextContainer: {

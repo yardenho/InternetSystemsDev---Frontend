@@ -24,6 +24,7 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
 }) => {
     const [postDescription, setPostDescription] = useState("");
     const [avatarUri, setAvatarUri] = useState("");
+    const [error, setError] = useState(false);
 
     console.log("my app is running");
 
@@ -66,6 +67,10 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
 
     const onSaveCallback = async () => {
         console.log("button was pressed");
+        if (postDescription == "" || avatarUri == "") {
+            setError(true);
+            return;
+        }
         const post: newPost = {
             message: postDescription,
             image: "url",
@@ -140,6 +145,17 @@ const PostAdd: FC<{ route: any; navigation: any }> = ({
                         <Text style={styles.buttonText}>SAVE</Text>
                     </TouchableOpacity>
                 </View>
+                {error && (
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            color: "red",
+                            alignSelf: "center",
+                        }}
+                    >
+                        Please enter a valid fields
+                    </Text>
+                )}
             </View>
         </ScrollView>
     );

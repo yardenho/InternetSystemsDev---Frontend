@@ -85,7 +85,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const connectUser = async () => {
         const token = await AsyncStorage.getItem("accessToken");
         //פתיחת סוקט ללקוח
-        socket = Client("http://192.168.1.156:3000", {
+        socket = Client("http://192.168.1.231:3000", {
             auth: {
                 token: "barrer " + token,
             },

@@ -171,20 +171,19 @@ const MyProfile: FC<{ route: any; navigation: any }> = ({
                         ></Ionicons>
                     </TouchableOpacity>
                 </View>
-
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setFullName}
-                    placeholder="Full Name"
-                    value={userFullname}
-                    editable={editable}
-                />
                 <TextInput
                     style={styles.input}
                     onChangeText={setEmail}
                     placeholder="Email"
                     value={userEmail}
                     editable={false}
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setFullName}
+                    placeholder="Full Name"
+                    value={userFullname}
+                    editable={editable}
                 />
                 <TextInput
                     style={styles.input}
