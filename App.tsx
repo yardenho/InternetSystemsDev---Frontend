@@ -1,24 +1,10 @@
 import { FC, useState } from "react";
-import {
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TouchableOpacity,
-    Button,
-    Alert,
-    TextInput,
-    TouchableHighlight,
-} from "react-native";
+import { StatusBar, StyleSheet, View, TouchableOpacity } from "react-native";
 import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import StudentList from "./components/studentList";
-import StudentDetails from "./components/StudentDetails";
-import StudentAdd from "./components/StudentAdd";
 import PostAdd from "./components/PostAdd";
 import PostList from "./components/PostsList";
 import LoginPage from "./components/Login";
@@ -29,70 +15,9 @@ import MyPostsList from "./components/myPostsList";
 import MyProfile from "./components/myProfile";
 import PostEdit from "./components/editPost";
 import Chat from "./components/chat";
+import authModel from "./Model/auth_model";
 
-const InfoScreen: FC<{ route: any; navigation: any }> = ({
-    route,
-    navigation,
-}) => {
-    return (
-        <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-            <Text>Details Screen</Text>
-        </View>
-    );
-};
-// const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const LogoTitle: FC = () => {
-    return (
-        <TouchableOpacity
-            onPress={() => {
-                console.log("title pressed");
-            }}
-        >
-            <Image
-                style={{ width: 50, height: 50 }}
-                source={require("./assets/avatar.png")}
-            />
-        </TouchableOpacity>
-    );
-};
-
-const studentStack = createNativeStackNavigator();
-const StudentStackComponent: FC<{ route: any; navigation: any }> = ({
-    route,
-    navigation,
-}) => {
-    const addNewStudents = () => {
-        navigation.navigate("StudentAdd");
-    };
-    return (
-        <studentStack.Navigator>
-            <studentStack.Screen
-                name="studentList"
-                component={StudentList}
-                options={{
-                    headerRight: () => (
-                        <TouchableOpacity onPress={addNewStudents}>
-                            <Ionicons
-                                name={"add-outline"}
-                                size={40}
-                                color={"gray"}
-                            />
-                        </TouchableOpacity>
-                    ),
-                }}
-            />
-            <studentStack.Screen
-                name="StudentDetails"
-                component={StudentDetails}
-            />
-            <studentStack.Screen name="StudentAdd" component={StudentAdd} />
-        </studentStack.Navigator>
-    );
-};
 
 const postsStack = createNativeStackNavigator();
 const PostsStackComponent: FC<{ route: any; navigation: any }> = ({
@@ -182,6 +107,7 @@ const MyPostsStackComponent: FC<{ route: any; navigation: any }> = ({
     );
 };
 const logout = async () => {
+    await authModel.logout();
     await AsyncStorage.clear();
     setTokenFunc(null);
     updateToken();
@@ -240,7 +166,6 @@ const App: FC = () => {
                                 ? "chatbubbles"
                                 : "chatbubbles-outline";
                         }
-                        // You can return any component that you like here!
                         return (
                             <Ionicons
                                 name={iconName}

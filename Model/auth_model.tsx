@@ -58,4 +58,17 @@ const refreshToken = async () => {
     await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
 };
 
-export default { userLogin, userRegister, refreshToken };
+const logout = async () => {
+    console.log("logout()");
+    const token = await AsyncStorage.getItem("refreshToken");
+    console.log(token);
+    apiClient.setHeader("Authorization", "JWT " + token);
+    const res: any = await authApi.logout();
+    if (res.status == 400) {
+        console.log("error in logout");
+        return; //?????????/ TODO
+    }
+    console.log("finish in logout");
+};
+
+export default { userLogin, userRegister, refreshToken, logout };

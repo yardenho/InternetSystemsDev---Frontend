@@ -12,8 +12,13 @@ const refresh = async () => {
     return apiClient.get("/auth/refresh");
 };
 
+const logout = async () => {
+    return apiClient.get("/auth/logout");
+};
+
 export default {
     login,
     register,
     refresh,
+    logout,
 };
